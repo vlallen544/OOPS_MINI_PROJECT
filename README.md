@@ -1,67 +1,77 @@
-# Vehicle Service Management — Java Mini Project
+# Vehicle Service Management
 
-A small college OOP project with **seven Java classes** and a single-page browser UI. It uses only the Java standard library, plain HTML, and CSS.
+A Java OOP mini project for registering vehicles and keeping service records. The browser page has forms for vehicle and owner details, a search box, and a table of services.
 
-## Important features
+## Features
 
-1. Register a car or motorcycle with its model, owner name, and phone.
-2. View and search vehicles by registration, model, owner, or phone.
-3. Add a service description and a charge in whole rupees.
-4. Mark a service as completed and view previous service records.
+- [x] Register cars and motorcycles with a registration number, model, owner name, and phone number.
+- [x] View all registered vehicles and the total vehicle count.
+- [x] Search by registration, model, owner, or phone. Searches ignore letter case.
+- [x] Clear the search to return to the full vehicle list.
+- [x] Reject duplicate registrations, including numbers entered with different spacing or letter case.
+- [x] Add a service to a registered vehicle with a description and a charge in whole rupees.
+- [x] Assign each service an ID and record the current date automatically.
+- [x] Start services as **Pending** and mark them **Completed** when finished.
+- [x] Keep previous service records, including multiple services for the same vehicle.
+- [x] Check required details and reject invalid charges. Charges must be whole numbers from ₹0 to ₹10,00,000.
+- [x] Load two sample vehicles and services with `--demo`.
+- [x] Use the page on smaller screens; wide tables scroll horizontally.
 
-Owner details are stored with each vehicle. Each service records one whole-rupee charge and a pending or completed status.
+## Screenshots
 
-## Run
+Screenshots from the running application using sample data.
 
-Install **JDK 17 or later**, then:
+**Main page**
+
+![Vehicle registration and service forms, registered vehicles, and service records](docs/screenshots/overview.png)
+
+**Search by owner**
+
+Searching for “Asha” shows her vehicle.
+
+![Vehicle search showing Asha Rao's Honda City](docs/screenshots/vehicle-search.png)
+
+**Service records**
+
+The oil change is completed. A second service for the same vehicle is still pending.
+
+![Service history showing completed and pending work with dates and charges](docs/screenshots/service-records.png)
+
+**Duplicate registration check**
+
+Entering an existing registration again shows an error.
+
+![Duplicate vehicle registration error above the forms](docs/screenshots/duplicate-registration.png)
+
+## Run locally
+
+Requires **JDK 17 or later** and a browser. There are no external libraries to install.
 
 ```bash
+git clone https://github.com/vlallen544/OOPS_MINI_PROJECT.git
 cd OOPS_MINI_PROJECT
-./run-ui.sh
-```
-
-Open **http://127.0.0.1:8080**. Stop with `Ctrl+C`.
-
-To start with two sample vehicles and two service records:
-
-```bash
 ./run-ui.sh --demo
 ```
 
-For another port, use `./run-ui.sh --demo --port=8090`.
+Open **http://127.0.0.1:8080**. Stop the server with `Ctrl+C`.
 
-**Storage:** `ArrayList` collections hold the records in memory. Refreshing the browser keeps the records; restarting the Java server clears them. No database, npm installation, or internet connection is needed to present it locally.
+Use `./run-ui.sh` for an empty vehicle list. If port 8080 is occupied, use `./run-ui.sh --demo --port=8090`.
 
-## Read the files in this order
+Records are stored in `ArrayList` collections. They remain after refreshing the page, but are cleared when the Java server stops. There is no database or login.
 
-| File | Purpose |
+## OOP concepts used
+
+| Concept | Where it is used |
 | --- | --- |
-| `model/Vehicle.java` | Abstract parent class with common vehicle and owner details. |
-| `model/Car.java` | A vehicle subclass that returns the type “Car”. |
-| `model/Motorcycle.java` | Another subclass that returns “Motorcycle”. |
-| `model/ServiceRecord.java` | One vehicle's service description, date, charge, and completion status. |
-| `service/VehicleServiceManager.java` | Adds, searches, and finds vehicles; adds and completes services. |
-| `web/WebServer.java` | Receives HTML forms and displays records in the browser. |
-| `Main.java` | Creates the manager and starts the application. |
+| Encapsulation | Private fields in `Vehicle` and `ServiceRecord`, accessed through methods. |
+| Abstraction | `Vehicle` is abstract and declares `getVehicleType()`. |
+| Inheritance | `Car` and `Motorcycle` extend `Vehicle`. |
+| Polymorphism | A `List<Vehicle>` holds both types; each returns its own vehicle type. |
+| Association | Each `ServiceRecord` refers to a registered `Vehicle`. |
 
-All Java files are under `src/main/java/com/vehicleservice/`.
-The UI files are `src/main/resources/web/index.html` and `styles.css`.
+The Java source is in [`src/main/java/com/vehicleservice`](src/main/java/com/vehicleservice). `VehicleServiceManager` handles the operations, `WebServer` receives HTML forms and renders the page, and `Main` starts the application. The UI uses plain HTML and CSS, with no JavaScript.
 
-The UI has **no JavaScript, JSON API, framework, or build dependencies**. A form sends data directly to Java. Java calls the manager, then displays the updated page. The server redirects after successful submissions so refreshing does not add a record twice.
-
-## OOP concepts
-
-- **Encapsulation:** fields are private; getters expose their values, and `markCompleted()` changes service status.
-- **Abstraction:** `Vehicle` is abstract and declares `getVehicleType()`.
-- **Inheritance:** `Car` and `Motorcycle` extend `Vehicle`.
-- **Polymorphism:** one `List<Vehicle>` contains both subclasses; calling `getVehicleType()` returns the appropriate type.
-- **Association:** a `ServiceRecord` refers to the vehicle being serviced.
-
-The project also demonstrates constructors, `ArrayList`, loops, basic validation, and exception handling.
-
-See [PRESENTATION.md](PRESENTATION.md) for a short demo script and viva questions.
-
-## Test
+## Run the test
 
 ```bash
 mkdir -p out
@@ -69,12 +79,6 @@ javac --release 17 -d out $(find src/main/java src/test/java -name '*.java')
 java -ea -cp out com.vehicleservice.VehicleServiceManagerTest
 ```
 
-## Optional temporary internet link
+The test covers registration, searching, duplicate checks, invalid service entries, service history, and completion.
 
-The earlier tunnel option is still supported. Run `cloudflared tunnel --url http://127.0.0.1:8080 --no-autoupdate` in another terminal, then start the application with the printed HTTPS origin:
-
-```bash
-./run-ui.sh --demo --public-origin=https://YOUR-HOST.trycloudflare.com
-```
-
-Both processes must stay running. The link is temporary, has no login, and shares the same in-memory records with visitors. Local presentation does not need this.
+[Presentation notes and viva questions](PRESENTATION.md)
