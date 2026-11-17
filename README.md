@@ -63,13 +63,38 @@ Records are stored in `ArrayList` collections. They remain after refreshing the 
 
 | Concept | Where it is used |
 | --- | --- |
+| Classes and objects | `OopDemo` uses `new` to create `Car` and `Motorcycle` objects. |
+| Constructors, `this`, and `super` | Constructors set object details; `this` refers to fields and `super(...)` calls the parent constructor. |
 | Encapsulation | Private fields in `Vehicle` and `ServiceRecord`, accessed through methods. |
 | Abstraction | `Vehicle` is abstract and declares `getVehicleType()`. |
 | Inheritance | `Car` and `Motorcycle` extend `Vehicle`. |
-| Polymorphism | A `List<Vehicle>` holds both types; each returns its own vehicle type. |
+| Polymorphism | An `ArrayList<Vehicle>` holds both types; each returns its own vehicle type. |
+| Method overriding | `Car` and `Motorcycle` each implement `getVehicleType()`. |
+| Method overloading | `addVehicle(...)` accepts either five details or one `Vehicle` object. |
+| Interface | `WebServer` implements Java's `HttpHandler` and overrides `handle()`. |
 | Association | Each `ServiceRecord` refers to a registered `Vehicle`. |
 
 The Java source is in [`src/main/java/com/vehicleservice`](src/main/java/com/vehicleservice). `VehicleServiceManager` handles the operations, `WebServer` receives HTML forms and renders the page, and `Main` starts the application. The UI uses plain HTML and CSS, with no JavaScript.
+
+### Small OOP demo
+
+To try the core classes without starting the website:
+
+```bash
+mkdir -p out
+javac --release 17 -d out $(find src/main/java -name '*.java')
+java -cp out com.vehicleservice.OopDemo
+```
+
+```text
+Car - Honda City
+Motorcycle - Honda Shine
+Car - Maruti Swift
+Before: Pending
+After: Completed
+```
+
+Start reading with [`Vehicle.java`](src/main/java/com/vehicleservice/model/Vehicle.java), its two child classes, and [`OopDemo.java`](src/main/java/com/vehicleservice/OopDemo.java). The comments point out the OOP concepts as they appear.
 
 ## Run the test
 

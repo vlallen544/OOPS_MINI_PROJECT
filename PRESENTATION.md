@@ -2,51 +2,89 @@
 
 ## Introduction
 
-“My project is a Vehicle Service Management System written in Java. It helps a small service center register vehicles, search owner details, record services, and track whether the work is completed.”
+“My project is a Vehicle Service Management System written in Java. It registers vehicles, stores owner details, records services, and tracks whether the work is completed.”
 
-## Three-minute demonstration
+## Start with the OOP demo
+
+This program uses the same model and manager classes as the website:
+
+```bash
+mkdir -p out
+javac --release 17 -d out $(find src/main/java -name '*.java')
+java -cp out com.vehicleservice.OopDemo
+```
+
+It prints three vehicle types and models, then changes a service from Pending to Completed. Open `OopDemo.java` while explaining the output.
+
+## Explain the code in this order
+
+1. **Vehicle.java:** the abstract parent class. Its private fields store the shared vehicle and owner details. Getters allow other classes to read them. The constructor uses `this` to distinguish fields from its parameters.
+2. **Car.java and Motorcycle.java:** the child classes. `extends Vehicle` demonstrates inheritance. `super(...)` calls the parent's constructor. Each child overrides `getVehicleType()`.
+3. **ServiceRecord.java:** a record of one service. It refers to a `Vehicle` object and stores the description, date, charge, and completion flag. `markCompleted()` updates the private flag.
+4. **VehicleServiceManager.java:** two private `ArrayList` collections store vehicles and services. Loops handle duplicate checks, searches, and completion. The getter methods return list copies so callers cannot remove the manager's records.
+5. **OopDemo.java:** creates objects and puts cars and motorcycles into the same vehicle list. The loop calls `getVehicleType()` on each object and gets the correct child's result.
+6. **Main.java:** creates the manager, optionally adds sample data, and starts the website.
+7. **WebServer.java:** implements the standard `HttpHandler` interface. Java calls its `handle()` method for browser requests. Other small methods read the forms, call the manager, and build the HTML tables.
+
+The domain classes and manager contain the vehicle management logic. The web server handles HTTP and HTML; it does not decide vehicle types, duplicate rules, charges, or completion status.
+
+## Overloading and overriding
+
+These calls use two versions of the same method in `VehicleServiceManager`:
+
+```java
+Car car = new Car("KA01AB1234", "Asha Rao", "9845012345", "Honda City");
+manager.addVehicle(car);
+manager.addVehicle("KA05CD5678", "Motorcycle", "Arjun Mehta", "9876512340", "Honda Shine");
+```
+
+That is **overloading**: the method name stays the same, but the parameter lists differ.
+
+`Car` and `Motorcycle` each provide a body for `Vehicle.getVehicleType()`. That is **overriding**: a child class supplies its version of an inherited method.
+
+## Website demonstration
 
 1. Run `./run-ui.sh --demo` and open `http://127.0.0.1:8080`.
-2. Point out the vehicle registration form and the two sample vehicles.
-3. Register a new vehicle: `KA02EF9012`, `Car`, `Maruti Swift`, owner `Rahul`, phone `9876543210`.
-4. Search for `Rahul`. Explain that the manager checks the list using a loop. Clear the search.
-5. Select the new vehicle, enter `General service` and charge `600`, then add the service.
-6. Show its “Pending” status and click “Mark completed”.
-7. Try registering the same vehicle again to demonstrate validation.
-
-## Explain the code
-
-Start with `Vehicle.java`. It stores the shared details in private fields and declares an abstract method for the vehicle type.
-
-Show `Car.java` and `Motorcycle.java`. Both inherit the common details and override `getVehicleType()`. This demonstrates inheritance and polymorphism without repeating the fields.
-
-Show `ServiceRecord.java`. Each record has an ID, a reference to its vehicle, a description, a date, a charge, and a completion flag.
-
-Show `VehicleServiceManager.java`. Two `ArrayList` collections store vehicles and services. Simple loops handle duplicate checks, searches, and status updates. The manager contains the project logic independently of the UI.
-
-Finally, show `Main.java` and explain that `WebServer.java` connects HTML forms to the manager. There is no JavaScript application to explain.
+2. Point out the two sample vehicles.
+3. Register `KA02EF9012`, type `Car`, model `Maruti Swift`, owner `Rahul`, phone `9876543210`.
+4. Search for `Rahul`, then clear the search.
+5. Select that vehicle, enter `General service` with charge `600`, and add the service.
+6. Show its Pending status and click Mark completed.
+7. Register the same vehicle again to show the duplicate check.
 
 ## Request flow
 
 ```text
-HTML form → WebServer → VehicleServiceManager → Vehicle / ServiceRecord
-         ← updated HTML page with the saved records
+Browser form → WebServer → VehicleServiceManager → Vehicle / ServiceRecord
+Browser page ← WebServer builds the updated HTML tables
 ```
 
 ## Common viva questions
 
-**Why is Vehicle abstract?** It describes common vehicle details, while each subclass supplies its own vehicle type. We create cars or motorcycles instead of a general Vehicle object.
+**What is a class, and what is an object?** A class defines fields and methods. `Car` is a class; the `car` created with `new Car(...)` is an object.
 
-**Where is polymorphism used?** `List<Vehicle>` stores both cars and motorcycles. `getVehicleType()` calls the appropriate subclass implementation.
+**What does a constructor do?** It sets the object's starting values when `new` creates it. A Car constructor calls the Vehicle constructor using `super(...)`.
 
-**Why use ArrayList?** It grows as records are added and is easy to search using a loop. It is enough for a small demonstration.
+**What do this and super mean?** `this` refers to the current object. `super` refers to the parent class; `super(...)` calls its constructor.
 
-**How are duplicate vehicles prevented?** Registration numbers are converted to uppercase and spaces are removed. The manager checks existing registrations before adding a new one.
+**Why is main static?** Java starts the program by calling `main()` without creating a Main object first. Other methods here work on the objects we create.
 
-**How is a service connected to a vehicle?** `ServiceRecord` stores a reference to a registered `Vehicle` object.
+**What does final mean on the fields?** A final field cannot be assigned a different value after it is initialized. A final list reference still allows adding records to that list.
 
-**Does it calculate a bill?** It stores one whole-rupee charge per service. Billing, taxes, and payments are outside this basic project's scope.
+**Where is encapsulation used?** Vehicle details and the service completion flag are private. Getters read the details; `markCompleted()` changes service status through a method.
 
-**Does it save data permanently?** No. Records remain in memory while the Java program is running. A database or file storage could be a future improvement.
+**Why is Vehicle abstract?** It contains the common vehicle details and requires each child to provide its type. We create cars and motorcycles rather than a general Vehicle object.
 
-**Why use a browser UI?** It gives an easy way to enter and view records, while Java handles all the actual project logic.
+**Where is polymorphism used?** The manager's `ArrayList<Vehicle>` contains both child types. The same `getVehicleType()` call returns Car or Motorcycle according to the actual object.
+
+**What is the difference between overloading and overriding?** Overloading uses the same method name with different parameters. Overriding gives an inherited method a child-specific implementation.
+
+**Where is an interface used?** `WebServer implements HttpHandler`. That interface requires `handle(HttpExchange)`, which Java's HTTP server calls for incoming requests.
+
+**Why are there no setters for every field?** The project does not edit registered details. A constructor sets them once. The service status has a method to make the one supported change: completion.
+
+**Why return copies of the lists?** Clearing a returned list should not delete the manager's actual records. The copy contains references to the same objects, so completing a service still updates that record.
+
+**How are duplicate vehicles prevented?** Registration numbers are converted to uppercase and spaces are removed. The manager checks existing registrations before adding a vehicle.
+
+**Does it save data permanently?** No. The lists stay in memory while the Java program is running. Restarting it clears the records.

@@ -1,5 +1,6 @@
 package com.vehicleservice;
 
+import com.vehicleservice.model.Car;
 import com.vehicleservice.model.ServiceRecord;
 import com.vehicleservice.service.VehicleServiceManager;
 
@@ -7,13 +8,18 @@ import com.vehicleservice.service.VehicleServiceManager;
 public class VehicleServiceManagerTest {
     public static void main(String[] args) {
         VehicleServiceManager manager = new VehicleServiceManager();
-        manager.addVehicle("KA 01 AB 1234", "Car", "Asha Rao", "9845012345", "Honda City");
+        Car car = new Car("KA 01 AB 1234", "Asha Rao", "9845012345", "Honda City");
+        manager.addVehicle(car);
         manager.addVehicle("KA05CD5678", "Motorcycle", "Arjun Mehta", "9876512340", "Honda Shine");
         assert manager.getVehicles().size() == 2;
         assert manager.findVehicle("ka01ab1234").getVehicleType().equals("Car");
         assert manager.findVehicle("KA05CD5678").getVehicleType().equals("Motorcycle");
         assert manager.searchVehicles("ASHA").size() == 1;
         assert manager.searchVehicles("unknown").isEmpty();
+
+        // Editing a returned list must not change the manager's private list.
+        manager.getVehicles().clear();
+        assert manager.getVehicles().size() == 2;
 
         try {
             manager.addVehicle("ka01ab1234", "Car", "Other owner", "123", "Other model");
@@ -44,6 +50,8 @@ public class VehicleServiceManagerTest {
         manager.addService("KA01AB1234", "General service", 500);
         assert manager.getServices().size() == 2 : "Service history should be preserved";
         assert manager.getServices().get(1).getId() == 2;
+        manager.getServices().clear();
+        assert manager.getServices().size() == 2;
         System.out.println("All basic vehicle management tests passed.");
     }
 }
