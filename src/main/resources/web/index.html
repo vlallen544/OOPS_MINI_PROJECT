@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A simple vehicle registration and service management system.">
+  <title>Vehicle Service Management</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <span class="logo" aria-hidden="true">V</span>
+      <div><h1>Vehicle Service Management</h1><p>Register vehicles. Record services. Track completion.</p></div>
+    </div>
+  </header>
+  <main>
+    %s
+    <div class="forms">
+      <section class="card">
+        <h2><span class="step">1</span> Register a vehicle</h2>
+        <p class="hint">Enter the vehicle and owner details together.</p>
+        <form method="post" action="/vehicles" class="fields">
+          <label>Registration number<input name="registration" placeholder="KA01AB1234" maxlength="120" required></label>
+          <label>Vehicle type<select name="type"><option>Car</option><option>Motorcycle</option></select></label>
+          <label class="wide">Vehicle model<input name="model" placeholder="e.g. Honda City" maxlength="120" required></label>
+          <label>Owner name<input name="owner" placeholder="e.g. Asha Rao" maxlength="120" required></label>
+          <label>Phone number<input name="phone" type="tel" placeholder="e.g. 9845012345" maxlength="120" required></label>
+          <button class="wide" type="submit">Register vehicle</button>
+        </form>
+      </section>
+      <section class="card">
+        <h2><span class="step">2</span> Add a service</h2>
+        <p class="hint">Select a registered vehicle and record its service.</p>
+        <form method="post" action="/services" class="fields">
+          <label class="wide">Vehicle<select name="registration" required><option value="" disabled selected>Select a vehicle</option>%s</select></label>
+          <label class="wide">Service description<input name="description" placeholder="e.g. Oil change" maxlength="120" required></label>
+          <label class="wide">Service charge (₹, whole rupees)<input name="charge" type="number" min="0" max="1000000" step="1" placeholder="e.g. 800" required></label>
+          <button class="wide" type="submit">Add service</button>
+        </form>
+      </section>
+    </div>
+    <section class="card list-card">
+      <div class="section-heading">
+        <div><h2>Registered vehicles <span class="count">%d</span></h2><p class="hint">Search by registration, model, owner, or phone.</p></div>
+        <form method="get" action="/" class="search" role="search">
+          <label class="sr-only" for="search">Search vehicles</label>
+          <input id="search" name="q" value="%s" placeholder="Search vehicles…" maxlength="120" type="search">
+          <button type="submit">Search</button><a href="/">Clear</a>
+        </form>
+      </div>
+      <div class="table-scroll"><table id="vehicles">
+        <thead><tr><th>Registration</th><th>Type</th><th>Model</th><th>Owner</th><th>Phone</th></tr></thead>
+        <tbody>%s</tbody>
+      </table></div>
+    </section>
+    <section class="card list-card">
+      <div class="section-heading"><div><h2>Service records <span class="count">%d</span></h2><p class="hint">Each service starts as pending. Mark it completed when finished.</p></div></div>
+      <div class="table-scroll"><table id="services">
+        <thead><tr><th>ID</th><th>Vehicle</th><th>Service</th><th>Date</th><th>Charge</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody>%s</tbody>
+      </table></div>
+    </section>
+    <footer>Records are stored in memory and cleared when the server restarts.</footer>
+  </main>
+</body>
+</html>

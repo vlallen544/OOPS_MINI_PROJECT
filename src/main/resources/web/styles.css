@@ -1,0 +1,72 @@
+/* Simple responsive layout. No UI framework or JavaScript is needed. */
+:root {
+  font-family: Arial, sans-serif;
+  color: #24332e;
+  background: #f4f6f3;
+  line-height: 1.5;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+header { background: #213e34; color: white; padding: 27px 24px; }
+.header-content { max-width: 1120px; margin: auto; display: flex; align-items: center; gap: 17px; }
+.logo { background: #d6e9b8; color: #213e34; border-radius: 12px; padding: 6px 17px; font-size: 29px; font-weight: bold; }
+h1 { font-size: 25px; margin: 0; }
+header p { color: #c7d6cd; margin: 4px 0 0; font-size: 13px; }
+main { max-width: 1168px; margin: auto; padding: 28px 24px; }
+h2 { font-size: 18px; margin: 0; }
+p { margin: 0; }
+.forms { display: grid; grid-template-columns: 1fr 1fr; gap: 23px; margin-bottom: 23px; }
+.card { background: white; border: 1px solid #dfe6dc; border-radius: 12px; padding: 24px; }
+.step { display: inline-block; text-align: center; margin-right: 8px; border-radius: 50%; width: 27px; background: #edf3e6; color: #4e693b; font-size: 15px; line-height: 27px; }
+.hint { margin-top: 7px; margin-bottom: 21px; font-size: 13px; color: #657467; }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }
+label { display: flex; flex-direction: column; gap: 7px; font-size: 13px; font-weight: bold; }
+.wide { grid-column: 1 / -1; }
+input, select, button { font: inherit; border-radius: 6px; }
+input, select { background: white; color: #24332e; border: 1px solid #cbd6c7; padding: 11px 12px; width: 100%; min-width: 0; font-size: 14px; font-weight: normal; }
+input::placeholder { color: #7b877a; }
+button { background: #315a45; color: white; border: 1px solid #315a45; padding: 11px 17px; cursor: pointer; font-size: 14px; }
+button:hover { background: #22432f; }
+a { color: #315a45; }
+input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px solid #9abe77; outline-offset: 2px; }
+.list-card { margin-bottom: 23px; padding: 0; overflow: hidden; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 23px 24px; }
+.section-heading .hint { margin-bottom: 0; }
+.count { margin-left: 6px; padding: 3px 8px; background: #edf3e6; color: #557047; font-size: 12px; border-radius: 5px; vertical-align: middle; }
+.search { display: flex; align-items: center; gap: 9px; }
+.search input { width: 180px; }
+.search button { padding: 10px 14px; }
+.search a { font-size: 13px; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+th { background: #f6f8f3; color: #53664f; font-size: 12px; }
+th, td { border-top: 1px solid #e6ebe2; padding: 15px 22px; }
+td { overflow-wrap: anywhere; }
+th { white-space: nowrap; }
+.small { padding: 7px 10px; font-size: 12px; white-space: nowrap; }
+.status { border-radius: 5px; padding: 5px 9px; font-size: 12px; white-space: nowrap; }
+.pending { background: #fff1d8; color: #87601d; }
+.completed { background: #e9f3e1; color: #426735; }
+.notice { background: #e9f3e1; color: #365d2c; border: 1px solid #cadfb8; border-radius: 8px; padding: 13px 17px; margin-bottom: 23px; font-size: 14px; }
+.error { background: #fff0ed; color: #9b3a2b; border-color: #edc6be; }
+.empty { text-align: center; color: #687664; padding: 28px; }
+footer { text-align: center; color: #687664; font-size: 12px; padding: 2px 0 12px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 800px) {
+  .forms { grid-template-columns: 1fr; }
+  .section-heading { align-items: stretch; flex-direction: column; }
+  .search input { width: 100%; }
+  .search { width: 100%; }
+}
+@media (max-width: 480px) {
+  header { padding: 23px 17px; }
+  h1 { font-size: 20px; }
+  .logo { display: none; }
+  main { padding: 20px 14px; }
+  .card { padding: 20px; }
+  .list-card { padding: 0; }
+  .section-heading { padding: 20px; }
+  .fields { grid-template-columns: 1fr; }
+  table { min-width: 640px; }
+  th, td { padding: 13px 17px; }
+}
